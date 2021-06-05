@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="OstrongPermissions:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/OstrongPermissions_jar</output-path>
+    <root id="archive" name="OstrongPermissions.jar">
+      <element id="module-output" name="OstrongPermissions" />
+    </root>
+  </artifact>
+</component>

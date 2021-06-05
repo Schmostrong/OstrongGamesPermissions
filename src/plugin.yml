@@ -1,0 +1,5 @@
+name: OstrongGames_Permissions
+author: Ostrong
+api-version: 1.16.5
+version: 1.0
+main: og.administration.permissions.main.OstrongGamesPermissionsMain.java
