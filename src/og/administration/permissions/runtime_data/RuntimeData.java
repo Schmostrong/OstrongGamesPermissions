@@ -6,6 +6,7 @@ import og.administration.permissions.utils.OstrongGamesUser;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * This class holds all variables that are processed at the runtime
@@ -45,6 +46,25 @@ public class RuntimeData {
     }
 
     /**
+     * Function is used to query a single permission
+     * @param permission - type: String; Represents the permission that is searched
+     * @return - type: OstrongGamesPermission; Represents the OstrongGamesPermission object that is queried
+     */
+    public OstrongGamesPermission getRuntimePermission(String permission){
+        for(OstrongGamesPermission perm : getRuntimePermissions()){
+            if(perm.getPermission().equals(permission))
+                return perm;
+        }
+        return null;
+    }
+
+    public OstrongGamesPermission createRuntimePermission(String permission, String plugin){
+        OstrongGamesPermission newPerm = new OstrongGamesPermission(permission, plugin);
+        runtimePermissions.add(newPerm);
+        return newPerm;
+    }
+
+    /**
      * Function is used to return the OstrongGamesGroups objects, that are currently loaded
      * @return - type: Set<OstrongGamesGroups>; Returns the currently loaded OstrongGamesGroups as a Set
      */
@@ -72,5 +92,37 @@ public class RuntimeData {
      */
     public Set<OstrongGamesUser> getRuntimeUsers() {
         return runtimeUsers;
+    }
+
+    /**
+     * Function is used to return an OstrongGamesUser object based on the uuid of the player
+     * @param uuid - type: UUID; Represents the uuid the minecraft server uses to identify a player
+     * @return - type: OstrongGamesUser; Represents the queried OstrongGamesUser object
+     */
+    public OstrongGamesUser getRuntimeUser(UUID uuid){
+        for(OstrongGamesUser user : getRuntimeUsers()){
+            if(user.getUUID() == uuid){
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public boolean userHasPermission(OstrongGamesUser user, String permission){
+        for(OstrongGamesPermission perm : user.getUserPermissions()){
+            if(perm.getPermission().equals(permission)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Function is used to add a permission to an existing group
+     * @param newPerm - type: OstrongGamesPermission; Represents the permission that should be granted
+     * @param group - type: OstrongGamesGroup; Represents the group this permission should be added to
+     */
+    public void addPermissionToGroup(OstrongGamesPermission newPerm, OstrongGamesGroup group){
+        group.addGroupPermission(newPerm);
     }
 }

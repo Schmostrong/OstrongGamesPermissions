@@ -27,26 +27,27 @@ public class ConfigurationLoader {
     private String group_remove_not_existing;
     private String group_remove_existing;
     private String group_permission_add_not_existing;
+    private String new_permission_missing_plugin;
+    private String not_permitted;
 
-    /**
-     * Default constructor that fills the available fields with default values
-     */
-    public ConfigurationLoader(){
-        this("localhost", 3306, "OstrongGamesPermissions", "§7[§3OGPermissions§7] >>");
-    }
-
-    /**
-     * Constructor, that is used to initialize a ConfigurationLoader instance
-     * @param dataBaseUrl - Represents the URL of the database to connect to
-     * @param dataBasePort - Represents the port of the database to connect to
-     * @param dataBaseName - Represents the name of the database that is to be used
-     * @param ingamePrefix - Represents the prefix that is handled when the plugin delivers output
-     */
-    public ConfigurationLoader(String dataBaseUrl, int dataBasePort, String dataBaseName, String ingamePrefix){
+    public ConfigurationLoader(String dataBaseUrl, int dataBasePort, String dataBaseName, String ingamePrefix, String wrong_parameters_count, String parameter_value_insufficient, String group_add_successful, String group_already_exists, String group_permission_add_successful, String group_already_has_permission, String player_permission_add_successful, String player_already_has_permission, String group_remove_not_existing, String group_remove_existing, String group_permission_add_not_existing, String new_permission_missing_plugin, String not_permitted) {
         this.dataBaseUrl = dataBaseUrl;
         this.dataBasePort = dataBasePort;
         this.dataBaseName = dataBaseName;
         this.ingamePrefix = ingamePrefix;
+        this.wrong_parameters_count = wrong_parameters_count;
+        this.parameter_value_insufficient = parameter_value_insufficient;
+        this.group_add_successful = group_add_successful;
+        this.group_already_exists = group_already_exists;
+        this.group_permission_add_successful = group_permission_add_successful;
+        this.group_already_has_permission = group_already_has_permission;
+        this.player_permission_add_successful = player_permission_add_successful;
+        this.player_already_has_permission = player_already_has_permission;
+        this.group_remove_not_existing = group_remove_not_existing;
+        this.group_remove_existing = group_remove_existing;
+        this.group_permission_add_not_existing = group_permission_add_not_existing;
+        this.new_permission_missing_plugin = new_permission_missing_plugin;
+        this.not_permitted = not_permitted;
     }
 
     /**
@@ -167,5 +168,21 @@ public class ConfigurationLoader {
      */
     public String getGroup_permission_add_not_existing() {
         return group_permission_add_not_existing;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getNew_permission_missing_plugin() {
+        return new_permission_missing_plugin;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getNot_permitted() {
+        return not_permitted;
     }
 }
