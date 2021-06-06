@@ -10,4 +10,16 @@ database_password: 'og2021'
 ##############################################################
 ##                    INGAME SETTINGS                       ##
 ##############################################################
-prefix: '§7[§3OGPermissions§7] >>'
+prefix: '§7[§3OGPermissions§7] >> '
+wrong_parameters_count: 'Wrong usage'
+parameter_value_insufficient: 'The value of a parameter is wrong'
+group_add_successful: 'The group was successfully added'
+group_already_exists: 'There is already a group with this name'
+group_permission_add_successful: 'The permission was successfully granted to this group'
+group_permission_add_not_existing: 'This group does not exist'
+group_already_has_permission: 'This permission has already been granted to this group'
+player_permission_add_successful: 'The permission was successfully granted to this player'
+player_already_has_permission: 'This permission has already been granted to this player'
+group_remove_not_existing: 'There is no group named'
+group_remove_existing: 'The group was successfully removed'
+

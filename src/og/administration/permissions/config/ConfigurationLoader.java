@@ -16,6 +16,17 @@ public class ConfigurationLoader {
      * Ingame settings
      */
     private String ingamePrefix;
+    private String wrong_parameters_count;
+    private String parameter_value_insufficient;
+    private String group_add_successful;
+    private String group_already_exists;
+    private String group_permission_add_successful;
+    private String group_already_has_permission;
+    private String player_permission_add_successful;
+    private String player_already_has_permission;
+    private String group_remove_not_existing;
+    private String group_remove_existing;
+    private String group_permission_add_not_existing;
 
     /**
      * Default constructor that fills the available fields with default values
@@ -68,5 +79,93 @@ public class ConfigurationLoader {
      */
     public String getIngamePrefix() {
         return ingamePrefix;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getWrong_parameters_count() {
+        return wrong_parameters_count;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getParameter_value_insufficient() {
+        return parameter_value_insufficient;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_add_successful() {
+        return group_add_successful;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_already_exists() {
+        return group_already_exists;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_permission_add_successful() {
+        return group_permission_add_successful;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_already_has_permission() {
+        return group_already_has_permission;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getPlayer_permission_add_successful() {
+        return player_permission_add_successful;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getPlayer_already_has_permission() {
+        return player_already_has_permission;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_remove_not_existing() {
+        return group_remove_not_existing;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_remove_existing() {
+        return group_remove_existing;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_permission_add_not_existing() {
+        return group_permission_add_not_existing;
     }
 }

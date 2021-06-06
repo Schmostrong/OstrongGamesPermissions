@@ -1,5 +1,6 @@
 package og.administration.permissions.utils;
 
+import og.administration.permissions.main.OstrongGamesPermissionsMain;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.UUID;
  */
 public class OstrongGamesUser {
     private UUID uuid;
+    private OstrongGamesGroup userGroup;
     private Set<OstrongGamesPermission> userPermissions;
 
 
@@ -23,7 +25,16 @@ public class OstrongGamesUser {
      * @param uuid - Describes the unique identifier user by the minecraft server to identify the player
      */
     public OstrongGamesUser(UUID uuid){
-        this(uuid, new HashSet<>());
+        this(uuid, "Spieler");
+    }
+
+    /**
+     * Constructor is used to initiate a user that has never joined the server before
+     * @param uuid - Describes the unique identifier used by the minecraft server to identify the player
+     * @param groupName - Represents the name of the group the player should be added to
+     */
+    public OstrongGamesUser(UUID uuid, String groupName){
+        this(uuid, groupName, new HashSet<>());
     }
 
     /**
@@ -33,8 +44,9 @@ public class OstrongGamesUser {
      * @param uuid - Describes the unique identifier user by the minecraft server to identify the player
      * @param userPermissions - Describes a set that holds all permissions that are granted to this user
      */
-    public OstrongGamesUser(UUID uuid, Set<OstrongGamesPermission> userPermissions) {
+    public OstrongGamesUser(UUID uuid, String groupName, Set<OstrongGamesPermission> userPermissions) {
         this.uuid = uuid;
+        this.userGroup = OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup(groupName);
         this.userPermissions = new HashSet<>();
     }
 

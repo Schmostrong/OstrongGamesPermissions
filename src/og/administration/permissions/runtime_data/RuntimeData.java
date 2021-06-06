@@ -53,6 +53,20 @@ public class RuntimeData {
     }
 
     /**
+     * Function is used to return a specific OstrongGamesGroup based on the name of the group
+     * This is valuable when adding a player to a group
+     * @param groupName - type: String; Represents the name of the group the user should be added
+     * @return - type: OstrongGamesGroup; Represents the OstrongGamesGroup object of the group the user should be added
+     */
+    public OstrongGamesGroup getRuntimeGroup(String groupName){
+        for(OstrongGamesGroup group : getRuntimeGroups()){
+            if(group.getGroupName().equals(groupName))
+                return group;
+        }
+        return null;
+    }
+
+    /**
      * Function is used to return the OstrongGamesUser objects, that are currently loaded
      * @return - type: Set<OstrongGamesUser>; Returns the currently loaded OstrongGamesUsers as a Set
      */
