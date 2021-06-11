@@ -4,6 +4,7 @@ import og.administration.permissions.main.OstrongGamesPermissionsMain;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -32,6 +33,16 @@ public class OstrongGamesPermissionsListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e){
         Player p = e.getPlayer();
         OstrongGamesPermissionsMain.getDAO().writePlayerData(p.getUniqueId());
+    }
+
+    /**
+     * Function is used to display the groups prefix in the chat
+     * @param playerChatEvent
+     */
+    @EventHandler
+    public void onPlayerChat(PlayerChatEvent playerChatEvent){
+        Player player = playerChatEvent.getPlayer();
+        player.setDisplayName(OstrongGamesPermissionsMain.getRuntime().getRuntimeUser(player.getUniqueId()).getUserGroup().getGroupPrefix() + player.getDisplayName());
     }
 
 }

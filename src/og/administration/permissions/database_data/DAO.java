@@ -66,7 +66,7 @@ public class DAO {
                         }
 
                         for(Integer permId : permIds){
-                            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionName, plugin FROM OstrongGamesPermission WHERE permissionId = ?");
+                            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionName, permissionPlugin FROM OstrongGamesPermission WHERE permissionId = ?");
                             ps.setInt(1, permId);
                             ResultSet rs4 = ps.executeQuery();
 
@@ -234,6 +234,42 @@ public class DAO {
                     }
                 }
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public boolean checkIfGroupExists(String groupName){
+        PreparedStatement ps = null;
+        try{
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
+            ps.setString(1, groupName);
+
+            ResultSet rs = ps.executeQuery();
+            int rsLength = 0;
+            while (rs.next()){
+                rsLength++;
+            }
+
+            if(rsLength == 0){
+                return false;
+            }
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
+    public void writeGroupToDatabase(String groupName, String groupPrefix){
+        PreparedStatement ps = null;
+        try{
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroup VALUES(?, ?, ?)");
+            ps.setString(1, groupName);
+            ps.setString(2, groupPrefix);
+            ps.setTime(3, Time.valueOf(LocalTime.now()));
+            ps.executeQuery();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
