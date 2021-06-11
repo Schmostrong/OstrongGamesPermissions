@@ -8,7 +8,7 @@ database_user: 'og'
 database_password: 'og2021'
 
 ##############################################################
-##                    INGAME SETTINGS                       ##
+##                    MESSAGE SETTINGS                      ##
 ##############################################################
 prefix: '§7[§3OGPermissions§7] >> '
 wrong_parameters_count: 'Wrong usage'
@@ -25,3 +25,6 @@ group_remove_existing: 'The group was successfully removed'
 new_permission_missing_plugin: 'You are trying to add a new permission, please add the plugin parameter'
 not_permitted: 'You are not permitted to do this'
 
+##############################################################
+##                    INGAME SETTINGS                       ##
+##############################################################

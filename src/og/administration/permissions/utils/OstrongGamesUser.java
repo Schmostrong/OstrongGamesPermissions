@@ -67,6 +67,22 @@ public class OstrongGamesUser {
     }
 
     /**
+     * Returns the unique identifier of this user
+     * @return
+     */
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    /**
+     * Returns the group of this user
+     * @return
+     */
+    public OstrongGamesGroup getUserGroup() {
+        return userGroup;
+    }
+
+    /**
      * Function is used to grant a permission to the user
      * @param permission - type: String; holds the permission that should be added
      * @param plugin - type: String; defines the name of the plugin, the permission belongs to

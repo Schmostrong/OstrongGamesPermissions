@@ -58,10 +58,75 @@ public class RuntimeData {
         return null;
     }
 
+    /**
+     * Function is used to create a new permission that is added to the runtime data
+     * @param permission - type: String; Actual permission that should be created
+     * @param plugin - type: String; Plugin this permission belongs to
+     * @return
+     */
     public OstrongGamesPermission createRuntimePermission(String permission, String plugin){
         OstrongGamesPermission newPerm = new OstrongGamesPermission(permission, plugin);
         runtimePermissions.add(newPerm);
         return newPerm;
+    }
+
+    /**
+     * Function is used to create a new user used that is added to the runtime data
+     * @param user - type: UUID; Represents the unique identifier of a minecraft player
+     * @param groupName - type; String; Represents the name of the group this user belongs to
+     * @return
+     */
+    public OstrongGamesUser createRuntimeUser(UUID user, String groupName){
+        OstrongGamesUser runtimeUser = new OstrongGamesUser(user, groupName);
+        runtimeUsers.add(runtimeUser);
+        return runtimeUser;
+    }
+
+    /**
+     * Function is used to create a new group that is added to the runtime data
+     * @param groupName - type: String; Represents the name of the created group
+     * @param groupPrefix - type: String; Represents the prefix of the created group
+     * @return
+     */
+    public OstrongGamesGroup createRuntimeGroup(String groupName, String groupPrefix){
+        OstrongGamesGroup newGroup = new OstrongGamesGroup(groupName, groupPrefix);
+        runtimeGroups.add(newGroup);
+        return newGroup;
+    }
+
+    /**
+     * Function is used to remove a user from the runtime data
+     * @param uuid - type: UUID; Represents the unique identifier of a minecraft player
+     */
+    public void removeRuntimeUser(UUID uuid){
+        OstrongGamesUser user = null;
+        for(OstrongGamesUser runtimeUser : runtimeUsers){
+            if(runtimeUser.getUUID() == uuid){
+                user = runtimeUser;
+            }
+        }
+        runtimeUsers.remove(user);
+    }
+
+    public OstrongGamesGroup removeRuntimeGroupIfLastMember(UUID uuid){
+        OstrongGamesGroup group = null;
+        for(OstrongGamesUser runtimeUser : runtimeUsers){
+            if(runtimeUser.getUUID() == uuid){
+                group = runtimeUser.getUserGroup();
+            }
+        }
+
+        for(OstrongGamesUser user : runtimeUsers){
+            if(user.getUserGroup() == group){
+                group = null;
+            }
+
+            if(group != null){
+                runtimeGroups.remove(group);
+            }
+        }
+
+        return group;
     }
 
     /**
@@ -108,6 +173,12 @@ public class RuntimeData {
         return null;
     }
 
+    /**
+     * Function is used to check whether a user is permitted to do a specific action
+     * @param user - type: OstrongGamesUser; Represents the user that should be checked
+     * @param permission - type: String; Permission that should be checked
+     * @return - type: boolean; Indicates, whether the user is permitted
+     */
     public boolean userHasPermission(OstrongGamesUser user, String permission){
         for(OstrongGamesPermission perm : user.getUserPermissions()){
             if(perm.getPermission().equals(permission)){

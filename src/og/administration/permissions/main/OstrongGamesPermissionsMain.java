@@ -4,6 +4,7 @@ import og.administration.permissions.commands.OstrongGamesPermissionsGroupAddCom
 import og.administration.permissions.commands.OstrongGamesPermissionsGroupAddPermissionCommand;
 import og.administration.permissions.commands.OstrongGamesPermissionsGroupRemoveCommand;
 import og.administration.permissions.config.ConfigurationLoader;
+import og.administration.permissions.database_data.DAO;
 import og.administration.permissions.listener.OstrongGamesPermissionsListener;
 import og.administration.permissions.runtime_data.RuntimeData;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +14,7 @@ public class OstrongGamesPermissionsMain extends JavaPlugin {
     private static OstrongGamesPermissionsMain mainInstance;
     private static ConfigurationLoader configurationLoaderInstance;
     private static RuntimeData runtime;
+    private static DAO dao;
 
     @Override
     public void onEnable(){
@@ -35,6 +37,11 @@ public class OstrongGamesPermissionsMain extends JavaPlugin {
                                                                 this.getConfig().getString("new_permission_missing_plugin"),
                                                                 this.getConfig().getString("not_permitted"));
         runtime = new RuntimeData();
+        dao = new DAO(this.getConfig().getString("database_url"),
+                this.getConfig().getInt("database_port"),
+                this.getConfig().getString("database_name"),
+                this.getConfig().getString("database_user"),
+                this.getConfig().getString("database_password"));
 
         this.getConfig().options().copyDefaults(true);
         saveDefaultConfig();
@@ -60,4 +67,6 @@ public class OstrongGamesPermissionsMain extends JavaPlugin {
     public static RuntimeData getRuntime(){
         return runtime;
     }
+
+    public static DAO getDAO(){return dao;}
 }

@@ -1,5 +1,6 @@
 package og.administration.permissions.listener;
 
+import og.administration.permissions.main.OstrongGamesPermissionsMain;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +21,7 @@ public class OstrongGamesPermissionsListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
-        //TODO: Load players data from database
+        OstrongGamesPermissionsMain.getDAO().retrievePlayerData(p.getUniqueId());
     }
 
     /**
@@ -30,6 +31,7 @@ public class OstrongGamesPermissionsListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e){
         Player p = e.getPlayer();
-        //TODO: Remove players data from runtime data and write to database
+        OstrongGamesPermissionsMain.getDAO().writePlayerData(p.getUniqueId());
     }
+
 }

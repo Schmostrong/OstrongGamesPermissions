@@ -72,6 +72,10 @@ public class DatabaseConnection {
         return database_url;
     }
 
+    /**
+     * Function is used to establish a connection to the database
+     * @throws SQLException
+     */
     public void openConnection() throws SQLException {
         if(this.database_connection != null || !this.database_connection.isClosed())
             return;
@@ -80,5 +84,13 @@ public class DatabaseConnection {
                                                                     this.database_url + ":" +
                                                                     this.database_port + "/" +
                                                                     this.database_name, this.database_user, this.database_password);
+    }
+
+    /**
+     * Function returns the connection object
+     * @return - Returns the connection object
+     */
+    public Connection getDatabase_connection() {
+        return database_connection;
     }
 }
