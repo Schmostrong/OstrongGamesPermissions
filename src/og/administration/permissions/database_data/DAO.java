@@ -33,7 +33,8 @@ public class DAO {
         this.databaseConnection = new DatabaseConnection(database_url, database_port, database_name, database_user, database_password);
     }
 
-    public void retrievePlayerData(UUID playerUUID){
+    public void retrievePlayerData(UUID playerUUID) throws SQLException {
+        this.databaseConnection.openConnection();
         PreparedStatement ps = null;
         try{
             ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesUser WHERE UUID = ?");
@@ -80,61 +81,52 @@ public class DAO {
             }
 
             if(rsLength == 0){
-                if(OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup("Spieler") == null){
-                    ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstronGamesGroup WHERE groupName = ?1");
-                    ps.setString(1, "Spieler");
+                if(OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDefault_group()) == null){
+                    ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId, groupName, groupPrefix FROM OstronGamesGroup WHERE groupName = ?");
+                    ps.setString(1, OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDefault_group());
                     ResultSet rs5 = ps.executeQuery();
 
                     while (rs5.next()){
                         int groupId = rs5.getInt(1);
+                        String groupName = rs5.getString(2);
+                        String groupPrefix = rs5.getString(3);
 
-                        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupName, groupPrefix, groupId FROM OstrongGamesGroup WHERE groupId = ?");
+                        OstrongGamesGroup runtimeGroup = OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(groupName, groupPrefix);
+                        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionId FROM OstrongGamesGroupPermissions WHERE groupId = ?");
                         ps.setInt(1, groupId);
-                        ResultSet rs2 = ps.executeQuery();
+                        ResultSet rs3 = ps.executeQuery();
 
-                        while (rs2.next()){
-                            String groupName = rs2.getString(1);
-                            String groupPrefix = rs2.getString(2);
+                        Set<Integer> permIds = new HashSet<>();
+                        while(rs3.next()){
+                            permIds.add(rs3.getInt(1));
+                        }
 
-                            OstrongGamesGroup runtimeGroup = OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup(groupName);
-                            if(runtimeGroup != null){
-                                OstrongGamesPermissionsMain.getRuntime().createRuntimeUser(playerUUID, groupName);
-                            }else{
-                                runtimeGroup = OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(groupName, groupPrefix);
-                                ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionId FROM OstrongGamesGroupPermissions WHERE groupId = ?");
-                                ps.setInt(1, groupId);
-                                ResultSet rs3 = ps.executeQuery();
+                        for(Integer permId : permIds){
+                            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionName, permissonPlugin FROM OstrongGamesPermission WHERE permissionId = ?");
+                            ps.setInt(1, permId);
+                            ResultSet rs4 = ps.executeQuery();
 
-                                Set<Integer> permIds = new HashSet<>();
-                                while(rs3.next()){
-                                    permIds.add(rs3.getInt(1));
-                                }
-
-                                for(Integer permId : permIds){
-                                    ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionName, plugin FROM OstrongGamesPermission WHERE permissionId = ?");
-                                    ps.setInt(1, permId);
-                                    ResultSet rs4 = ps.executeQuery();
-
-                                    while(rs4.next()){
-                                        OstrongGamesPermissionsMain.getRuntime().addPermissionToGroup(OstrongGamesPermissionsMain.getRuntime().createRuntimePermission(rs4.getString(1), rs4.getString(2)), runtimeGroup);
-                                    }
-                                }
+                            while(rs4.next()){
+                                OstrongGamesPermissionsMain.getRuntime().addPermissionToGroup(OstrongGamesPermissionsMain.getRuntime().createRuntimePermission(rs4.getString(1), rs4.getString(2)), runtimeGroup);
                             }
                         }
                     }
                 }else{
-                    OstrongGamesPermissionsMain.getRuntime().createRuntimeUser(playerUUID, "Spieler");
+                    OstrongGamesPermissionsMain.getRuntime().createRuntimeUser(playerUUID, OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDefault_group());
                 }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            this.databaseConnection.closeConnection();
         }
     }
 
-    public void writePlayerData(UUID playerUUID){
+    public void writePlayerData(UUID playerUUID) throws SQLException {
+        this.databaseConnection.openConnection();
         PreparedStatement ps = null;
         try{
-            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupName FROM OstrongGamesGroup g INNER JOIN OstrongGamesGroup u ON u.groupId = g.groupId WHERE u.UUID = ?");
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupName FROM OstrongGamesGroup g INNER JOIN OstrongGamesUser u ON u.groupId = g.groupId WHERE u.UUID = ?");
             ps.setString(1, "" + playerUUID);
 
             ResultSet rs = ps.executeQuery();
@@ -146,8 +138,8 @@ public class DAO {
                         if(user.getUserGroup().getGroupName().equals(groupName)){
                             return;
                         }else{
-                            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT g.groupId FROM OstrongGamesGroup g INNER JOIN OstrongGamesGroup u ON u.groupId = g.groupId WHERE u.UUID = ?");
-                            ps.setString(1, "" + playerUUID);
+                            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
+                            ps.setString(1, user.getUserGroup().getGroupName());
 
                             ResultSet rs2 = ps.executeQuery();
                             while(rs2.next()){
@@ -236,10 +228,13 @@ public class DAO {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            this.databaseConnection.closeConnection();
         }
     }
 
-    public boolean checkIfGroupExists(String groupName){
+    public boolean checkIfGroupExists(String groupName) throws SQLException {
+        this.databaseConnection.openConnection();
         PreparedStatement ps = null;
         try{
             ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
@@ -258,10 +253,13 @@ public class DAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
+        }finally {
+            this.databaseConnection.closeConnection();
         }
     }
 
-    public void writeGroupToDatabase(String groupName, String groupPrefix){
+    public void writeGroupToDatabase(String groupName, String groupPrefix) throws SQLException {
+        this.databaseConnection.openConnection();
         PreparedStatement ps = null;
         try{
             ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroup VALUES(?, ?, ?)");
@@ -272,6 +270,104 @@ public class DAO {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally{
+            this.databaseConnection.closeConnection();
         }
+    }
+
+    public boolean removeGroupFromDatabase(String groupName) throws SQLException {
+        this.databaseConnection.openConnection();
+        PreparedStatement ps = null;
+
+        try{
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
+            ps.setString(1, groupName);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                int groupId = rs.getInt(1);
+
+                ps = this.databaseConnection.getDatabase_connection().prepareStatement("DELETE FROM OstrongGamesGroup WHERE groupName = ?");
+                ps.setString(1, groupName);
+                ps.executeQuery();
+
+                ps = this.databaseConnection.getDatabase_connection().prepareStatement("DELETE FROM OstrongGamesGroupsPermissions WHERE groupId = ?");
+                ps.setInt(1, groupId);
+                ps.executeQuery();
+                return true;
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }finally{
+            this.databaseConnection.closeConnection();
+        }
+        return false;
+    }
+
+    public void createDefaultGroupIfNotExisting(String groupName, String groupPrefix) throws SQLException {
+        this.databaseConnection.openConnection();
+        PreparedStatement ps = null;
+        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
+        ps.setString(1, groupName);
+
+        ResultSet rs = ps.executeQuery();
+        int rsLength = 0;
+        while (rs.next()){
+            rsLength++;
+        }
+
+        if(rsLength == 0){
+            writeGroupToDatabase(groupName, groupPrefix);
+        }else{
+            return;
+        }
+        this.databaseConnection.closeConnection();
+    }
+
+    public OstrongGamesGroup loadDefaultGroup(String defaultGroupName) throws SQLException {
+        this.databaseConnection.openConnection();
+        PreparedStatement ps = null;
+        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupName, groupPrefix FROM OstrongGamesGroup WHERE groupName = ?");
+        ps.setString(1, defaultGroupName);
+
+        ResultSet rs  = ps.executeQuery();
+        while (rs.next()){
+            return OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(rs.getString(1), rs.getString(2));
+        }
+        this.databaseConnection.closeConnection();
+        return null;
+    }
+
+    public void loadGroupFromDatabase(String groupName) throws SQLException {
+        this.databaseConnection.openConnection();
+        PreparedStatement ps = null;
+        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupName, groupPrefix FROM OstrongGamesGroup WHERE groupName = ?");
+        ps.setString(1, groupName);
+
+        ResultSet rs  = ps.executeQuery();
+        while (rs.next()){
+            OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(rs.getString(1), rs.getString(2));
+        }
+        this.databaseConnection.closeConnection();
+    }
+
+    public boolean updatePlayersGroup(UUID player, String groupName) throws SQLException {
+        this.databaseConnection.openConnection();
+        PreparedStatement ps = null;
+        ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT groupId FROM OstrongGamesGroup WHERE groupName = ?");
+        ps.setString(1, groupName);
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()){
+            int groupId = rs.getInt(1);
+
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("UPDATE OstrongGamesGroup SET groupId = ? WHERE uuid = ?");
+            ps.setInt(1, groupId);
+            ps.setString(2, "" + player);
+            ps.executeQuery();
+            return true;
+        }
+        return false;
     }
 }

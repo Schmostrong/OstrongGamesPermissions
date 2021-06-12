@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
+
 public class OstrongGamesPermissionsGroupAddCommand implements CommandExecutor {
 
     @Override
@@ -15,17 +17,24 @@ public class OstrongGamesPermissionsGroupAddCommand implements CommandExecutor {
             Player p = (Player) commandSender;
 
             if(OstrongGamesPermissionsMain.getRuntime().userHasPermission(OstrongGamesPermissionsMain.getRuntime().getRuntimeUser(p.getUniqueId()), "og.permissions.addgroup")){
-                if(command.equals("oggroupadd") && strings.length == 2){
+                if(command.getName().equals("oggroupadd") && strings.length == 2){
                     if(OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup(strings[0]) == null){
-                        if(OstrongGamesPermissionsMain.getDAO().checkIfGroupExists(strings[0])){
+                        try {
+                            if(OstrongGamesPermissionsMain.getDAO().checkIfGroupExists(strings[0])){
+                                commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                                        + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_already_exists());
+                                return true;
+                            }else{
+                                OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(strings[0], strings[1]);
+                                commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                                        + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_add_successful());
+                                OstrongGamesPermissionsMain.getDAO().writeGroupToDatabase(strings[0], strings[1]);
+                                return true;
+                            }
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
                             commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
-                                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_already_exists());
-                            return true;
-                        }else{
-                            OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(strings[0], strings[1]);
-                            commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
-                                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_add_successful());
-                            OstrongGamesPermissionsMain.getDAO().writeGroupToDatabase(strings[0], strings[1]);
+                                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDatabase_error());
                             return true;
                         }
                     }else{
@@ -44,17 +53,24 @@ public class OstrongGamesPermissionsGroupAddCommand implements CommandExecutor {
                 return true;
             }
         }else{
-            if(command.equals("oggroupadd") && strings.length == 2){
+            if(command.getName().equals("oggroupadd") && strings.length == 2){
                 if(OstrongGamesPermissionsMain.getRuntime().getRuntimeGroup(strings[0]) == null){
-                    if(OstrongGamesPermissionsMain.getDAO().checkIfGroupExists(strings[0])){
+                    try {
+                        if(OstrongGamesPermissionsMain.getDAO().checkIfGroupExists(strings[0])){
+                            commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_already_exists());
+                            return true;
+                        }else{
+                            OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(strings[0], strings[1]);
+                            commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_add_successful());
+                            OstrongGamesPermissionsMain.getDAO().writeGroupToDatabase(strings[0], strings[1]);
+                            return true;
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
                         commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
-                                + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_already_exists());
-                        return true;
-                    }else{
-                        OstrongGamesPermissionsMain.getRuntime().createRuntimeGroup(strings[0], strings[1]);
-                        commandSender.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
-                                + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getGroup_add_successful());
-                        OstrongGamesPermissionsMain.getDAO().writeGroupToDatabase(strings[0], strings[1]);
+                                + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDatabase_error());
                         return true;
                     }
                 }else{

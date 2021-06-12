@@ -29,8 +29,12 @@ public class ConfigurationLoader {
     private String group_permission_add_not_existing;
     private String new_permission_missing_plugin;
     private String not_permitted;
+    private String database_error;
+    private String default_group;
+    private String default_prefix;
+    private String group_user_add;
 
-    public ConfigurationLoader(String dataBaseUrl, int dataBasePort, String dataBaseName, String ingamePrefix, String wrong_parameters_count, String parameter_value_insufficient, String group_add_successful, String group_already_exists, String group_permission_add_successful, String group_already_has_permission, String player_permission_add_successful, String player_already_has_permission, String group_remove_not_existing, String group_remove_existing, String group_permission_add_not_existing, String new_permission_missing_plugin, String not_permitted) {
+    public ConfigurationLoader(String dataBaseUrl, int dataBasePort, String dataBaseName, String ingamePrefix, String wrong_parameters_count, String parameter_value_insufficient, String group_add_successful, String group_already_exists, String group_permission_add_successful, String group_already_has_permission, String player_permission_add_successful, String player_already_has_permission, String group_remove_not_existing, String group_remove_existing, String group_permission_add_not_existing, String new_permission_missing_plugin, String not_permitted, String database_error, String default_group, String default_prefix, String group_user_add) {
         this.dataBaseUrl = dataBaseUrl;
         this.dataBasePort = dataBasePort;
         this.dataBaseName = dataBaseName;
@@ -48,6 +52,10 @@ public class ConfigurationLoader {
         this.group_permission_add_not_existing = group_permission_add_not_existing;
         this.new_permission_missing_plugin = new_permission_missing_plugin;
         this.not_permitted = not_permitted;
+        this.database_error = database_error;
+        this.default_group = default_group;
+        this.default_prefix = default_prefix;
+        this.group_user_add = group_user_add;
     }
 
     /**
@@ -184,5 +192,37 @@ public class ConfigurationLoader {
      */
     public String getNot_permitted() {
         return not_permitted;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getDatabase_error() {
+        return database_error;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getDefault_group() {
+        return default_group;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getDefault_prefix() {
+        return default_prefix;
+    }
+
+    /**
+     * Function is used to return a displayed message from the config
+     * @return - type: String; Represents a message that is displayed by the plugin
+     */
+    public String getGroup_user_add() {
+        return group_user_add;
     }
 }

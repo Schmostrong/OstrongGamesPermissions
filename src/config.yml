@@ -1,16 +1,16 @@
 ##############################################################
 ##                  DATABASE SETTINGS                       ##
 ##############################################################
-database_url: 'localhost'
+database_url: '192.168.1.20'
 database_port: 3306
 database_name: 'OstrongGamesPermissions'
-database_user: 'og'
-database_password: 'og2021'
+database_user: 'ogDBAdmin'
+database_password: '573V1bTG!n6h%f;'
 
 ##############################################################
 ##                    MESSAGE SETTINGS                      ##
 ##############################################################
-prefix: '§7[§3OGPermissions§7] >> '
+ingame_prefix: '§7[§3OGPermissions§7] >> '
 wrong_parameters_count: 'Wrong usage'
 parameter_value_insufficient: 'The value of a parameter is wrong'
 group_add_successful: 'The group was successfully added'
@@ -18,13 +18,17 @@ group_already_exists: 'There is already a group with this name'
 group_permission_add_successful: 'The permission was successfully granted to this group'
 group_permission_add_not_existing: 'This group does not exist'
 group_already_has_permission: 'This permission has already been granted to this group'
+group_user_add: 'The user was successfully added to this group'
 player_permission_add_successful: 'The permission was successfully granted to this player'
 player_already_has_permission: 'This permission has already been granted to this player'
 group_remove_not_existing: 'There is no group named'
 group_remove_existing: 'The group was successfully removed'
 new_permission_missing_plugin: 'You are trying to add a new permission, please add the plugin parameter'
 not_permitted: 'You are not permitted to do this'
+database_error: 'An error occured while trying to connect to the database'
 
 ##############################################################
 ##                    INGAME SETTINGS                       ##
 ##############################################################
+default_group: 'Spieler'
+default_prefix: '§eSpieler§7|'

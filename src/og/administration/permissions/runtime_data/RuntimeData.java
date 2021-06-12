@@ -1,12 +1,12 @@
 package og.administration.permissions.runtime_data;
 
+import og.administration.permissions.main.OstrongGamesPermissionsMain;
 import og.administration.permissions.utils.OstrongGamesGroup;
 import og.administration.permissions.utils.OstrongGamesPermission;
 import og.administration.permissions.utils.OstrongGamesUser;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * This class holds all variables that are processed at the runtime
@@ -108,6 +108,11 @@ public class RuntimeData {
         runtimeUsers.remove(user);
     }
 
+    /**
+     * Function is used to remove a group from the runtime data, when the user leaving is the last member that is currently online
+     * @param uuid - type: UUID; Represents the unique identifier for a minecraft player
+     * @return - type: OstrongGamesGroup; Return the group that is removed from the runtime data;
+     */
     public OstrongGamesGroup removeRuntimeGroupIfLastMember(UUID uuid){
         OstrongGamesGroup group = null;
         for(OstrongGamesUser runtimeUser : runtimeUsers){
@@ -127,6 +132,49 @@ public class RuntimeData {
         }
 
         return group;
+    }
+
+    /**
+     * Function is used to remove group on command and move users to the default group
+     * @param groupName
+     */
+    public void removeGroupIfLoadedAndMoveUsers(String groupName){
+        OstrongGamesGroup group = null;
+        for(OstrongGamesGroup loadedGroup : runtimeGroups){
+            if (loadedGroup.getGroupName().equals(groupName)){
+                group = loadedGroup;
+            }
+        }
+
+        if(group != null){
+            runtimeGroups.remove(group);
+
+            List<OstrongGamesUser> users = new ArrayList<>();
+            for(OstrongGamesUser loadedUser : runtimeUsers){
+                if(loadedUser.getUserGroup() == group){
+                    users.add(loadedUser);
+                }
+            }
+
+            if(getRuntimeGroup(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDefault_group()) == null){
+                try {
+                    OstrongGamesGroup loadedGroup = OstrongGamesPermissionsMain.getDAO().loadDefaultGroup(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDefault_group());
+                    for(OstrongGamesUser user : users){
+                        user.setUserGroup(loadedGroup);
+                    }
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void setRuntimeUserGroup(UUID user, OstrongGamesGroup group){
+        OstrongGamesUser runtimeUser = getRuntimeUser(user);
+
+        if(runtimeUser != null){
+            runtimeUser.setUserGroup(group);
+        }
     }
 
     /**

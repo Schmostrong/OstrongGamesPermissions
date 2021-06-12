@@ -2,12 +2,15 @@ package og.administration.permissions.main;
 
 import og.administration.permissions.commands.OstrongGamesPermissionsGroupAddCommand;
 import og.administration.permissions.commands.OstrongGamesPermissionsGroupAddPermissionCommand;
+import og.administration.permissions.commands.OstrongGamesPermissionsGroupAddUserCommand;
 import og.administration.permissions.commands.OstrongGamesPermissionsGroupRemoveCommand;
 import og.administration.permissions.config.ConfigurationLoader;
 import og.administration.permissions.database_data.DAO;
 import og.administration.permissions.listener.OstrongGamesPermissionsListener;
 import og.administration.permissions.runtime_data.RuntimeData;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
 
 public class OstrongGamesPermissionsMain extends JavaPlugin {
 
@@ -35,7 +38,11 @@ public class OstrongGamesPermissionsMain extends JavaPlugin {
                                                                 this.getConfig().getString("group_remove_existing"),
                                                                 this.getConfig().getString("group_permission_add_not_existing"),
                                                                 this.getConfig().getString("new_permission_missing_plugin"),
-                                                                this.getConfig().getString("not_permitted"));
+                                                                this.getConfig().getString("not_permitted"),
+                                                                this.getConfig().getString("database_error"),
+                                                                this.getConfig().getString("default_group"),
+                                                                this.getConfig().getString("default_prefix"),
+                                                                this.getConfig().getString("group_user_add"));
         runtime = new RuntimeData();
         dao = new DAO(this.getConfig().getString("database_url"),
                 this.getConfig().getInt("database_port"),
@@ -45,9 +52,15 @@ public class OstrongGamesPermissionsMain extends JavaPlugin {
 
         this.getConfig().options().copyDefaults(true);
         saveDefaultConfig();
+        try {
+            dao.createDefaultGroupIfNotExisting(getConfigurationLoaderInstance().getDefault_group(), getConfigurationLoaderInstance().getDefault_prefix());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         getCommand("oggroupadd").setExecutor(new OstrongGamesPermissionsGroupAddCommand());
         getCommand("oggroupremove").setExecutor(new OstrongGamesPermissionsGroupRemoveCommand());
         getCommand("oggroupaddperm").setExecutor(new OstrongGamesPermissionsGroupAddPermissionCommand());
+        getCommand("oggroupadduser").setExecutor(new OstrongGamesPermissionsGroupAddUserCommand());
         getServer().getPluginManager().registerEvents(new OstrongGamesPermissionsListener(), this);
     }
 

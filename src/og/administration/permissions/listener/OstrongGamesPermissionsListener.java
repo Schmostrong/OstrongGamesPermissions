@@ -8,6 +8,8 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.sql.SQLException;
+
 public class OstrongGamesPermissionsListener implements Listener {
     private static OstrongGamesPermissionsListener runtimeListener;
 
@@ -22,7 +24,13 @@ public class OstrongGamesPermissionsListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
-        OstrongGamesPermissionsMain.getDAO().retrievePlayerData(p.getUniqueId());
+        try {
+            OstrongGamesPermissionsMain.getDAO().retrievePlayerData(p.getUniqueId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            p.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDatabase_error());
+        }
     }
 
     /**
@@ -32,7 +40,13 @@ public class OstrongGamesPermissionsListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e){
         Player p = e.getPlayer();
-        OstrongGamesPermissionsMain.getDAO().writePlayerData(p.getUniqueId());
+        try {
+            OstrongGamesPermissionsMain.getDAO().writePlayerData(p.getUniqueId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            p.sendMessage(OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getIngamePrefix()
+                    + OstrongGamesPermissionsMain.getConfigurationLoaderInstance().getDatabase_error());
+        }
     }
 
     /**

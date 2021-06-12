@@ -83,6 +83,14 @@ public class OstrongGamesUser {
     }
 
     /**
+     * Function is used to set the players group
+     * @param userGroup - type: OstrongGamesGroup; Represents a object of the group
+     */
+    public void setUserGroup(OstrongGamesGroup userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    /**
      * Function is used to grant a permission to the user
      * @param permission - type: String; holds the permission that should be added
      * @param plugin - type: String; defines the name of the plugin, the permission belongs to

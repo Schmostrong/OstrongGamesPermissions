@@ -77,13 +77,17 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public void openConnection() throws SQLException {
-        if(this.database_connection != null || !this.database_connection.isClosed())
+       this.database_connection = DriverManager.getConnection("jdbc:mysql://" +
+                                                            this.database_url + ":" +
+                                                            this.database_port + "/" +
+                                                            this.database_name, this.database_user, this.database_password);
+    }
+
+    public void closeConnection() throws SQLException {
+        if(this.database_connection == null || this.database_connection.isClosed())
             return;
 
-        this.database_connection = DriverManager.getConnection("jdbc:mysql://" +
-                                                                    this.database_url + ":" +
-                                                                    this.database_port + "/" +
-                                                                    this.database_name, this.database_user, this.database_password);
+        this.database_connection.close();
     }
 
     /**
