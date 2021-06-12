@@ -1,0 +1,18 @@
+name: OstrongGames_Permissions
+author: Ostrong
+api-version: 1.16
+version: 1.0
+main: og.administration.permissions.main.OstrongGamesPermissionsMain
+commands:
+  oggroupadd:
+    usage: /oggroupadd <Group> <GroupPrefix>
+    description: Command is used to add a new group
+  oggroupremove:
+    usage: /oggroupremove <Group>
+    description: Command is used to remove an existing group
+  oggroupaddperm:
+    usage: /oggroupaddperm <Permission> <Group>
+    description: Command is used to add a permission to an existing group
+  oggroupadduser:
+    usage: /oggroupadduser <User> <Group>
+    description:  Command is used to set a players group
