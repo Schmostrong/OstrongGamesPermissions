@@ -5,10 +5,9 @@ import og.administration.permissions.utils.OstrongGamesGroup;
 import og.administration.permissions.utils.OstrongGamesPermission;
 import og.administration.permissions.utils.OstrongGamesUser;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -148,7 +147,7 @@ public class DAO {
                                 ps = this.databaseConnection.getDatabase_connection().prepareStatement("UPDATE OstrongGamesUser SET groupId = ? WHERE UUID = ? ");
                                 ps.setInt(1, groupId);
                                 ps.setString(2, "" + playerUUID);
-                                ps.executeQuery();
+                                ps.execute();
                             }
                         }
                     }
@@ -174,7 +173,7 @@ public class DAO {
                         ps.setString(1, perm.getPermission());
                         ps.setString(2, perm.getPlugin());
                         ps.setTime(3, Time.valueOf(LocalTime.now()));
-                        ps.executeQuery();
+                        ps.execute();
 
                         ps = this.databaseConnection.getDatabase_connection().prepareStatement("SELECT permissionId FROM OstrongGamesPermission WHERE permission = ?");
                         ps.setString(1, perm.getPermission());
@@ -193,7 +192,7 @@ public class DAO {
                                 ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroupsPermissions VALUES(?, ?)");
                                 ps.setInt(1, groupId);
                                 ps.setInt(2, permId);
-                                ps.executeQuery();
+                                ps.execute();
                             }
                         }
                     }
@@ -221,7 +220,7 @@ public class DAO {
                             ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroupsPermissions VALUES(?, ?)");
                             ps.setInt(1, groupId);
                             ps.setInt(2, permId);
-                            ps.executeQuery();
+                            ps.execute();
                         }
                     }
                 }
@@ -262,11 +261,11 @@ public class DAO {
         this.databaseConnection.openConnection();
         PreparedStatement ps = null;
         try{
-            ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroup VALUES(?, ?, ?)");
+            ps = this.databaseConnection.getDatabase_connection().prepareStatement("INSERT INTO OstrongGamesGroup (groupName, groupPrefix, insertDate) VALUES(?, ?, ?)");
             ps.setString(1, groupName);
             ps.setString(2, groupPrefix);
-            ps.setTime(3, Time.valueOf(LocalTime.now()));
-            ps.executeQuery();
+            ps.setDate(3, Date.valueOf(LocalDate.now()));
+            ps.execute();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -289,11 +288,11 @@ public class DAO {
 
                 ps = this.databaseConnection.getDatabase_connection().prepareStatement("DELETE FROM OstrongGamesGroup WHERE groupName = ?");
                 ps.setString(1, groupName);
-                ps.executeQuery();
+                ps.execute();
 
                 ps = this.databaseConnection.getDatabase_connection().prepareStatement("DELETE FROM OstrongGamesGroupsPermissions WHERE groupId = ?");
                 ps.setInt(1, groupId);
-                ps.executeQuery();
+                ps.execute();
                 return true;
             }
         }catch (SQLException throwables) {
@@ -365,7 +364,7 @@ public class DAO {
             ps = this.databaseConnection.getDatabase_connection().prepareStatement("UPDATE OstrongGamesGroup SET groupId = ? WHERE uuid = ?");
             ps.setInt(1, groupId);
             ps.setString(2, "" + player);
-            ps.executeQuery();
+            ps.execute();
             return true;
         }
         return false;
